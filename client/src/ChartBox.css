@@ -1,0 +1,81 @@
+#chartContainer {
+    /* outline: yellow dashed 1px; */
+    height: 100%;
+    /* background-color: white; */
+
+}
+#yLabels {
+    height: 100%;
+    /* background-color: rgba(153, 205, 50, 0.142); */
+    width: 15%;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+#yLabels p {
+    width: 100%;
+    font-size: calc(var(--fsz-table-small)*.8);
+    line-height: 2em;
+    position: absolute;
+}
+#yMax {
+    top: 0;
+    opacity: .6;
+}
+#yAvg {
+    /* position:fixed; */
+    height: 34%;
+    top: 33%;
+    vertical-align: middle;
+    opacity: .3;
+}
+#yMin {
+    bottom: 0;
+    opacity: .6;
+}
+
+
+
+.lineGraphContainer {
+    position: relative;
+    display: inline-block;
+    width: 85%;
+    /* display: block; */
+    height: 100%;
+    /* outline: purple dashed 1px; */
+}
+#lineGraph {
+    position: absolute;
+    /* outline: red dashed .3px; */
+    height: 100%;
+    /* width: 100%; */
+    margin: 0;
+    padding: 0;
+    /* vertical-align: top; */
+}
+
+
+/* //////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////// */
+
+/* .fullLineGraphContainer {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 80vw;
+    height: 80vh;
+    outline: purple dashed 1px;
+    z-index: 11;
+    margin: auto auto;
+    background-color: aliceblue;
+    text-align: center;
+}
+#FullLineGraph {
+    position: absolute;
+    outline: yellow dashed .3px;
+    height: 100%;
+    margin: 0 auto 55vh;
+    padding: 0;
+    /* vertical-align: top; */

@@ -1,0 +1,81 @@
+:root {
+  --tableRowHt: 2.6rem;
+  --tableRowHtHdr: 1.2rem;
+
+  --fsz-table: .7rem;
+  --fsz-table-small: .5rem;
+  --fsz-table-team: 1.1rem;
+  --fsz-gui: .7rem;
+
+  --row-pad: .21rem;
+  --corner-radius: 1rem;
+
+  --mono-tight:-.08rem;
+
+  --c-app-bg: rgb(11, 26, 55);
+  --c-app-highdim: rgba(0, 75, 225, 0.545);
+  --c-app-highlight: rgb(0, 75, 225);
+  --c-odds-bg: rgba(136, 213, 255, 0.099);
+  --c-odds-borderV: rgb(11, 26, 55);
+  --c-odds-borderH: rgb(11, 26, 55);
+  --odds-borderWH: 4px;
+  --odds-borderWV: 1px;
+  --c-odds-text: rgb(224, 238, 246);
+  --c-odds-text-half: rgb(106, 142, 162);
+
+  --c-data-green-hue: 155;
+  --c-data-green: hsl(155,100%,50%);
+  --c-data-green-l: 35%;
+  --c-data-red-hue: 345;
+  --c-data-red-l: 45%;
+
+}
+@font-face {
+  font-family: Mainfont;
+  src: url(../public/MartianMono-VariableFont_wdth\,wght.ttf);
+  font-stretch: 90%;
+  font-weight: 500;
+}
+@font-face {
+  font-family: MainfontVariable;
+  src: url(../public/MartianMono-VariableFont_wdth\,wght.ttf);
+  font-weight: 500;
+}
+@font-face {
+  font-family: MainfontThin;
+  src: url(../public/MartianMono-VariableFont_wdth\,wght.ttf);
+  font-stretch: 90%;
+  font-weight: 250;
+}
+@font-face {
+  font-family: Displayfont;  
+  src: url(../public/MartianMono-VariableFont_wdth\,wght.ttf);
+  font-weight: bolder;
+  font-stretch: 112%;
+  font-weight: 900;
+}
+@font-face {
+  font-family: Monofont;
+  src: url(../public/MartianMono-VariableFont_wdth\,wght.ttf);
+  font-weight: 300;
+  font-stretch: 85%;
+}
+@font-face {
+  font-family: Monofont-Italic;
+  src: url(../public/FragmentMono-Italic.ttf);
+}
+
+
+.App {
+  text-align: center;
+  font-family: Mainfont;
+  font-weight: bold;
+  background-color: var(--c-app-bg);
+  color: white;
+  /* height: 100vh; */
+}
+
+#main-content{
+  width: 95vw;
+  margin: 0 auto;
+}

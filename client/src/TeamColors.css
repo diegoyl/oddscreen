@@ -1,0 +1,265 @@
+/* 
+Format for class name is:
+    .my3code_sportKey
+
+    examples:
+        .SF_baseball_mlb            - SF Giants
+        .SF_americanfootball_nfl    - SF 49ers
+*/
+.DEFAULT {
+    background-color: #647f96;
+    color: #34506a;
+}
+
+/* MLB */
+.ARI_baseball_mlb {
+    background-color: #930e24;
+    color: #e3d1a3;
+}
+.ATL_baseball_mlb {
+    background-color: #112e6e;
+    color: #cf1141;
+}
+.BAL_baseball_mlb {
+    background-color: #ff5100;
+    color: #000000;
+}
+.BOS_baseball_mlb {
+    background-color: #001a49;
+    color: #d3143a;
+}
+.CHC_baseball_mlb {
+    background-color: #0e3798;
+    color: #df2f2f;
+}
+.CHW_baseball_mlb {
+    background-color: #000000;
+    color: #ffffff;
+}
+.CIN_baseball_mlb {
+    background-color: #c6011f;
+    color: #fbfeff;
+}
+.CLE_baseball_mlb {
+    background-color: #002f5d;
+    color: #E50022;
+}
+.COL_baseball_mlb {
+    background-color: #2c2c82;
+    color: #b6c2c9;
+}
+.DET_baseball_mlb {
+    background-color: #002954;
+    color: #ff5222;
+}
+.HOU_baseball_mlb {
+    background-color: #fd8b18;
+    color: #002262;
+}
+.KC_baseball_mlb {
+    background-color: #65bcff;
+    color: #003fad;
+}
+.LAA_baseball_mlb {
+    background-color: #BA0021;
+    color: #ffffff;
+}
+.LAD_baseball_mlb {
+    background-color: #0043d3;
+    color: #F1F3F4;
+}
+.MIA_baseball_mlb {
+    background-color: #009BD5;
+    color: #000000;
+}
+.MIL_baseball_mlb {
+    background-color: #003ea0;
+    color: #ffc52f;
+}
+.MIN_baseball_mlb {
+    background-color: #022751;
+    color: #d1133c;
+}
+.NYM_baseball_mlb {
+    background-color: #004cc6;
+    color: #ff5a19;
+}
+.NYY_baseball_mlb {
+    background-color: #00132d;
+    color: #dae1e4;
+}
+.OAK_baseball_mlb {
+    background-color: #004e3e;
+    color: #EFB21E;
+}
+.PHI_baseball_mlb {
+    background-color: #e9184c;
+    color: #004fc6;
+}
+.PIT_baseball_mlb {
+    background-color: #000000;
+    color: #fcb827;
+}
+.SD_baseball_mlb {
+    background-color: #4c3323;
+    color: #FFC425;
+}
+.SF_baseball_mlb {
+    background-color: hsl(0, 0%, 0%);
+    color: #ff4819;
+}
+.SEA_baseball_mlb {
+    background-color: #0b9294;
+    color: #022655;
+}
+.STL_baseball_mlb {
+    background-color: #C41E3A;
+    color: #fff8ee;
+}
+.TB_baseball_mlb {
+    background-color: #092c5c;
+    color: #90c0ff;
+}
+.TEX_baseball_mlb {
+    background-color: #0046b7;
+    color: #dc1e47;
+}
+.TOR_baseball_mlb {
+    background-color:#183eb0;
+    color: #ffffff;
+}
+.WAS_baseball_mlb {
+    background-color: #c30a38;
+    color: #12246c;
+}
+
+/* NFL */
+.ARI_americanfootball_nfl {
+    background-color: #ad173a;
+    color: rgb(255, 254, 251);
+}
+.ATL_americanfootball_nfl {
+    background-color: #000000;
+    color: #a71930;
+}
+.BAL_americanfootball_nfl {
+    background-color: #3926b1;
+    color: #d0ab31;
+}
+.BUF_americanfootball_nfl {
+    background-color: #00338D;
+    color: #d91b41;
+}
+.CAR_americanfootball_nfl {
+    background-color: #0093dd;
+    color: #101820;
+}
+.CHI_americanfootball_nfl {
+    background-color: #0b1d3e;
+    color: #de5612;
+}
+.CIN_americanfootball_nfl {
+    background-color: #fb4f14;
+    color: #000000;
+}
+.CLE_americanfootball_nfl {
+    background-color: #372203;
+    color: #ff3c00;
+}
+.DAL_americanfootball_nfl {
+    background-color: #002456;
+    color: #92b1af;
+}
+.DEN_americanfootball_nfl {
+    background-color: #fa6018;
+    color: #00214f;
+}
+.DET_americanfootball_nfl {
+    background-color: #0088b9;
+    color: #bfc9cf;
+}
+.GB_americanfootball_nfl {
+    background-color: #0d4839;
+    color: #FFB612;
+}
+.HOU_americanfootball_nfl {
+    background-color: #002354;
+    color: #bd1a36;
+}
+.IND_americanfootball_nfl {
+    background-color: #004594;
+    color: #efefef;
+}
+.JAC_americanfootball_nfl {
+    background-color: #009bc1;
+    color: #101820;
+}
+.KC_americanfootball_nfl {
+    background-color: #E31837;
+    color: #ffc445;
+}
+.LV_americanfootball_nfl {
+    background-color: #000000;
+    color: #A5ACAF;
+}
+.LAC_americanfootball_nfl {
+    background-color: #28a1ec;
+    color: #FFC20E;
+}
+.LAR_americanfootball_nfl {
+    background-color: #0049d2;
+    color: #ffd100;
+}
+.MIA_americanfootball_nfl {
+    background-color: #15a7b2;
+    color: #f0510d;
+}
+.MIN_americanfootball_nfl {
+    background-color: #4f1d90;
+    color: #ffcc25;
+}
+.NE_americanfootball_nfl {
+    background-color: #002244;
+    color: #C60C30;
+}
+.NO_americanfootball_nfl {
+    background-color: #bca461;
+    color: #0f1114;
+}
+.NYG_americanfootball_nfl {
+    background-color: #1d44b9;
+    color: #ffffff;
+}
+.NYJ_americanfootball_nfl {
+    background-color: #125f45;
+    color: #f7f7f7;
+}
+.PHI_americanfootball_nfl {
+    background-color: #003a41;
+    color: #a2b5bb; /* helmet silver */
+    /* color: #A5ACAF; */
+}
+.PIT_americanfootball_nfl {
+    background-color: #0b0f12;
+    color: #FFB612;
+}
+.SF_americanfootball_nfl {
+    background-color: #AA0000;
+    color: #e8cd8d;
+}
+.SEA_americanfootball_nfl {
+    background-color: #002244;
+    color: #6fc62c; 
+}
+.TB_americanfootball_nfl {
+    background-color: #282624;
+    color: #be1515;
+}
+.TEN_americanfootball_nfl {
+    background-color: #01224b;
+    color: #539eea;
+}
+.WAS_americanfootball_nfl {
+    background-color: #5A1414;
+    color: #FFB612 ;
+}

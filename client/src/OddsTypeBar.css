@@ -1,0 +1,156 @@
+:root {
+    --oddsTypeContHt: 2.3rem;
+    --bordRad: .35rem;
+    --btnBordWdth: 2px;
+    --button-gap: 1.2em;
+}
+
+#oddsTypeContainer {
+    width:fit-content;
+    height: var(--oddsTypeContHt);
+    padding: 1em;
+}
+#oddsTypeContainer button {
+    font-family: MainfontVariable;
+    font-stretch: 112%;
+    height:var(--oddsTypeContHt);
+    width: 3.5em;
+    font-size: calc(var(--fsz-gui)*1.2);
+    font-weight: 700;
+    background-color: var(--c-app-bg);
+    color: var(--c-app-highlight);
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	outline: var(--c-app-highlight) var(--btnBordWdth) solid;
+    transition: .2s ease-in-out;
+    vertical-align: top;
+}
+#oddsTypeContainer button:hover {
+    background-color: var(--c-app-highlight);
+    color: var(--c-app-bg);
+}
+#btn-h2h {
+    border-radius: var(--bordRad) 0 0 var(--bordRad) ;
+}
+#btn-spreads {
+    border-radius: 0;
+}
+#btn-totals {
+    border-radius: 0 var(--bordRad)  var(--bordRad)  0;
+}
+
+#oddsTypeContainer .activeOddsBtn {
+    background-color: var(--c-app-highlight);
+    color: white;
+}
+
+
+
+/* DROPDOWN MENU */
+#oddsTypeContainer .dropdown {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: var(--button-gap);
+}
+  
+#oddsTypeContainer .dropdown-button {
+    padding: 0 20px;
+    width: 6rem;
+    border-radius: var(--bordRad) ;
+    white-space: nowrap;
+    position: relative;
+    box-shadow: 0 0 100vw 50vw rgba(0, 7, 34, 0);
+    transition: box-shadow .2s ease-out;
+}
+#oddsTypeContainer .openShadow {
+    box-shadow: 0 0 100vw 50vw rgba(0, 7, 34, 0.7);
+    transition: box-shadow .6s;
+}
+  
+  
+.dropdown-menu {
+    display: block;
+    position: absolute;
+    /* top: calc(var(--oddsTypeContHt)/2); */
+    margin-top: .6rem;
+    border-radius: var(--bordRad);
+
+    background-color: var(--c-app-bg);
+    outline: var(--c-app-highlight) var(--btnBordWdth) solid;
+    padding: 0;
+    width: 100%;
+    z-index: 1;
+    font-family: Mainfont;
+}
+.dropdown-menu li {
+    font-family: MainfontVariable;
+    font-stretch: 90%;
+    font-size: calc(var(--fsz-gui)*1.2);
+    width: 100%;
+    color: var(--c-app-highlight);
+    padding: .4em 0;
+    margin: 0;
+    cursor: pointer;
+    list-style-type: none;
+}
+
+.dropdown-menu li:hover {
+    background-color: var(--c-app-highlight);
+    color: white;
+}
+
+
+
+/*  ALL BOOKS */
+#oddsTypeContainer #books-btn {
+    margin: 0 var(--button-gap);
+    border-radius: var(--bordRad);
+    padding: 0 .5em;
+    width: auto;
+}
+
+
+
+
+/*  REFRESHHHH */
+#oddsTypeContainer #refresh-btn {
+    margin-left: 1em;
+    font-family: "Lucida Sans Unicode";
+    font-stretch: 100%;
+    height:var(--oddsTypeContHt);
+    width: auto;
+    aspect-ratio: 1;
+    font-size: calc(var(--fsz-gui)*3);
+    line-height: 0em;
+    border-radius: var(--oddsTypeContHt);
+}
+
+
+/* REQUESTS USED TEXT */
+#reqContainer {
+    display: inline-block;
+    height: 100%;
+    margin-left: .5rem;
+}
+
+.reqP {
+    display: block;
+    font-family: MainfontThin;
+    margin: 0;
+    padding: 0;
+    color: var(--c-app-highlight);
+}
+#reqTitle {
+    height: calc(var(--oddsTypeContHt)*.45) ;
+    line-height: calc(var(--oddsTypeContHt)*.45) ;
+    font-size: calc(var(--fsz-gui)*.7);
+    font-weight: 900;
+    vertical-align: bottom;
+}
+#reqUsed {
+    height: calc(var(--oddsTypeContHt)*.55) ;
+    /* line-height: calc(var(--oddsTypeContHt)*2/3) ; */
+    font-size: var(--fsz-gui);
+}

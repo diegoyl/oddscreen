@@ -1,0 +1,56 @@
+#fullTableRow  .tableHeader{
+    height: var(--tableRowHtHdr);
+    /* padding-bottom: 5rem; */
+    /* padding: 0; */
+    margin-bottom: 2em;
+}
+.tableHeader .column{
+    margin-bottom: .5rem;
+    border-radius: calc(var(--tableRowHtHdr)/3);
+}
+.tableHeader .column{
+    background-color: transparent;
+}
+.tableHeader p{
+    font-size: var(--fsz-table);
+    font-family: Mainfont;
+}
+.tableHeader .c-team {
+    height: var(--tableRowHtHdr);
+}
+.tableHeader .column p{
+    line-height: var(--tableRowHtHdr);
+}
+
+#fanduel{
+    background-color: #0b70ff;
+    color: white;
+}
+#draftkings{
+    background-color: #5DAF10;
+    color: rgb(18, 18, 19);
+}
+#betmgm{
+    background-color: #B19560;
+    color: black;
+}
+#williamhill_us{
+    background-color: #083331;
+    color: #C5A461;
+}
+#espnbet{
+    background-color: #1ae3be;
+    color: #011a46;
+}
+#ballybet{
+    background-color: #4500db;
+    color: #ff3d3d;
+}
+#betrivers{
+    background-color: #F7B41D;
+    color: #0A202F;
+}
+#fliff{
+    background-color: #230c93;
+    color: #27DF44;
+}

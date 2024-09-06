@@ -1,0 +1,267 @@
+:root {
+  --col-width-scale: 100/71.5; /* = 100/sum  */
+  --c-date-width: 3.5%;
+  --c-team-width: 7%;
+  --c-want-width: 3%;
+  --c-best-width: 3%;
+  --c-hold-width: 3%;
+  --c-chart-width: 10%;
+  --c-book-width: 6%; /* x7 */
+}
+
+/* SHADING FOR DEBUGGING */
+/* .column{
+  outline: rgb(128, 126, 0) dashed 1px;
+}
+.column p{
+  background-color: rgba(183, 186, 102, 0.232);
+} */
+
+
+
+#fullTableRow{
+  text-align: left;
+  /* outline: rgb(255, 9, 9) .5px dashed; */
+  width: 100%;
+  margin: var(--odds-borderWH) auto;
+  color: var(--c-odds-text);
+  white-space: nowrap;
+  min-width: 42rem;
+}
+.tableRow-content{
+  background-color: var(--c-odds-bg);
+}
+.column{
+  display: inline-block;
+  height: 100%;
+  padding: var(--row-pad) 0;
+  white-space:nowrap;
+  vertical-align: top;
+}
+.column p{
+  margin: 0;
+  line-height: calc(var(--tableRowHt)/2);
+  text-align: center;
+  font-size: var(--fsz-table);
+  font-family: Monofont;
+}
+/* .column .doubleRow{
+  line-height: var(--tableRowHt);
+  white-space: nowrap;
+} */
+.c-team p{
+  font-family: Displayfont;
+  font-size: var(--fsz-table-team);
+  height: 50%;
+  line-height: calc(var(--tableRowHt)/2 + var(--row-pad));
+  vertical-align: middle;
+  
+}
+.c-hold p{
+  height: 100%;
+  transition: .5s ease-in;
+  line-height: calc(var(--tableRowHt) + var(--row-pad)*2);
+}
+.c-full-height {
+  padding: 0;
+  height: calc(var(--tableRowHt) + var(--row-pad)*2);
+}
+.c-book{
+    margin: 0 calc(var(--odds-borderWV)*.5);
+}
+.c-date p{
+  font-size: var(--fsz-table-small);;
+}
+.c-chart{
+  background-color: rgba(0, 0, 0, 0.3 8)
+}
+
+
+/*******************/
+/* COLUMN WIDTHS */
+/*******************/
+.c-date{
+  width: calc(var(--c-date-width)*var(--col-width-scale));
+  min-width: 2rem;
+}
+.c-team{
+  width: calc(var(--c-team-width)*var(--col-width-scale));
+  min-width: 3.6rem;
+}
+.c-want{
+  width: calc(var(--c--width)*var(--col-width-scale));
+  min-width: 3rem;
+}
+.c-best{
+  width: calc(var(--c-best-width)*var(--col-width-scale));
+  min-width: 3rem;
+}
+.c-hold{
+  width: calc(var(--c-hold-width)*var(--col-width-scale));
+  min-width: 3.2rem;
+}
+.c-chart{
+  width: calc(var(--c-chart-width)*var(--col-width-scale));
+}
+.c-book{
+  width: calc(var(--c-book-width)*var(--col-width-scale));
+  min-width: 5rem;
+}
+.c-want-content {
+}
+
+/*******************/
+/* COLUMN OUTLINES  ||||||||||||||||||||||||||||||||||||||||*/
+/*******************/
+.c-date-content{
+  /* outline: solid var(--odds-borderWV) var(--c-odds-borderV); */
+}
+.c-team-content{
+  /* outline: solid var(--odds-borderWV) var(--c-odds-borderV); */
+}
+.c-best-content{
+  /* outline: solid var(--odds-borderWV) var(--c-odds-borderV); */
+}
+.c-chart-content{
+  /* outline: solid var (--odds-borderWV) var(--c-odds-borderV); */
+}
+.c-book-content{
+  outline: solid var(--odds-borderWV) var(--c-odds-borderV);
+}
+
+/*******************/
+/*   ROW OUTLINES  ------------------------------------*/ 
+/*******************/
+.tableRow-content{
+  outline: solid var(--odds-borderW) var(--c-odds-borderH);
+  border-radius: var(--corner-radius) 0 0 var(--corner-radius);
+}
+
+
+/*******************/
+/*     ODDS BOX    */
+/*******************/
+
+.column .splitContainer {
+  /* vertical-align: top; */
+  height: calc(var(--tableRowHt)/2);
+  width: 100%;
+  margin: 0;
+  display: block;
+  /* outline: orange .1px solid; */
+  text-align: left;
+
+}
+.column .split {
+  display: inline-block;
+  margin: 0;
+}
+.column .line {
+  vertical-align: top;
+  text-align: right;
+  width: 58%;
+  padding-right: 7%;
+  letter-spacing: var(--mono-tight);
+  /* outline: dashed .3px yellow; */
+  /* background-color: rgba(13, 255, 0, 0.269); */
+
+}
+.column .odd {
+  text-align: left;
+  vertical-align: top;
+  font-size: var(--fsz-table-small);
+  color: var(--c-odds-text-half);
+  /* outline: dashed .3px red; */
+  /* background-color: rgba(255, 0, 0, 0.288); */
+}
+
+
+.gradient1 {
+  background-color: red;
+}
+.gradient2 {
+  background-color: yellow;
+  opacity: .1;
+}
+.bestHighlight {
+  background-color: hsla(var(--c-data-green-hue), 100%, var(--c-data-green-l), 0.18);
+  transition: .5s ease-in-out;
+}
+
+
+.c-hold .holdBoxHalf {
+  /* outline: red dashed 1px; */
+  font-size: var(--fsz-table-small);
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  transition: 'width' .5s ease-out;
+}
+.holdHide {
+  display: none;
+  width: 0%;
+}
+.holdML {
+  width: 100%;
+}
+
+
+/* WANT INPUT BOXES */
+.c-want-content p {
+  opacity: .5;
+  border: red .1px solid;
+  vertical-align: top;
+  /* height: 50%; */
+}
+.c-want-content {
+  height: calc(var(--tableRowHt));
+}
+.inputContainer {
+  position: relative;
+  display: block;
+  width: calc(var(--c--width)*var(--col-width-scale));
+  height: 50%;
+  /* outline: red .01px solid; */
+  /* max-width:; */
+}
+.inputContainer input {
+  position: absolute;
+  padding: 0;
+  margin: 0 .3rem;
+  /* width: calc(var(--c--width)*var(--col-width-scale)); */
+  width: 2.4rem;
+  height: 93%;
+  border: none;
+  background-color: rgba(128, 223, 255, 0.05);
+  display: block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  text-align: center;
+  font-family: Monofont;
+  font-size: var(--fsz-table);
+  color: rgba(255,255,255,.5);
+  border-radius: .3rem;  
+  -moz-appearance: textfield;
+}
+/* remove arrows */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.ic2 input{
+  bottom: 0;
+}
+
+#available {
+  color: var(--c-data-green);
+  opacity: 1;
+}
+#availablePlus {
+  color: var(--c-app-bg);
+  background-color: var(--c-data-green);
+  opacity: 1;
+}
