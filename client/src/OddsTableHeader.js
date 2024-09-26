@@ -22,7 +22,7 @@ const bookNames = {
 
 function OddsTableHeader({myBooks}) {
     return (
-      <div id="fullTableRow" className='tableHeader'>
+      <div className="fullTableRow" id='tableHeader'>
         <div className="column c-date">
         </div>
         <div className="column c-team">

@@ -9,26 +9,16 @@
     width:fit-content;
     height: var(--oddsTypeContHt);
     padding: 1em;
+    /* background-color: red; */
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 #oddsTypeContainer button {
-    font-family: MainfontVariable;
-    font-stretch: 112%;
     height:var(--oddsTypeContHt);
     width: 3.5em;
     font-size: calc(var(--fsz-gui)*1.2);
-    font-weight: 700;
-    background-color: var(--c-app-bg);
-    color: var(--c-app-highlight);
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	outline: var(--c-app-highlight) var(--btnBordWdth) solid;
-    transition: .2s ease-in-out;
-    vertical-align: top;
-}
-#oddsTypeContainer button:hover {
-    background-color: var(--c-app-highlight);
-    color: var(--c-app-bg);
 }
 #btn-h2h {
     border-radius: var(--bordRad) 0 0 var(--bordRad) ;

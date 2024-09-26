@@ -16,8 +16,17 @@ const gameDictSchema = new Schema({
 })
 const WantDictSchema= new Schema({
     _id: {type:String, required:true}, //market type
+    data: {type:Array, required:true}
+})
+const TrackingArrSchema= new Schema({
+    _id: {type:String, required:true}, //market type
+    data: {type:Array, required:true}
+})
+const CsvDataSchema= new Schema({
+    _id: {type:String, required:true}, //market type
     data: {type:String, required:true}
 })
+
 
 
 // const timeLogSchema = new Schema({
@@ -33,6 +42,8 @@ const TotalsCollection = mongoose.model("TotalsCollection", oddsCollectionSchema
 const RawData = mongoose.model("CurrentRawData", rawDataSchema, "CurrentRawData")
 const CurrentGameDicts = mongoose.model("CurrentGameDicts", gameDictSchema, "CurrentGameDicts")
 const WantDict = mongoose.model("WantDict", WantDictSchema, "WantDict")
+const TrackingArr = mongoose.model("TrackingArr", TrackingArrSchema, "TrackingArr")
+const CsvData = mongoose.model("CsvData", CsvDataSchema, "CsvData")
 
 const mySchemas = {
     "MLCollection":MLCollection, 
@@ -40,6 +51,9 @@ const mySchemas = {
     "TotalsCollection":TotalsCollection, 
     "RawData":RawData,
     "CurrentGameDicts":CurrentGameDicts,
-    "WantDict":WantDict}
+    "WantDict":WantDict,
+    "TrackingArr":TrackingArr,
+    "CsvData":CsvData
+}
 
 module.exports = mySchemas

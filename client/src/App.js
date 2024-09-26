@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import OddsTypeBar from './OddsTypeBar.js';
 import OddsTable from './OddsTable.js';
 import Loading from './Loading.js';
+import CsvConfirmation from './CsvConfirmation.js';
+import OddsTableHeader from './OddsTableHeader.js';
 
 // import logo from './logo.svg';
 import './App.css';
@@ -25,14 +27,24 @@ function App() {
   var [totalsData, setTotalsData] = useState()
   var [spreadsData, setSpreadsData] = useState()
   var [moneylinesData, setMoneylinesData] = useState()
+  var [totalsCSV, setTotalsCSV] = useState()
+  var [spreadsCSV, setSpreadsCSV] = useState()
+  var [moneylinesCSV, setMoneylinesCSV] = useState()
   var [initTotals, setInitTotals] = useState()
   var [gameIDs, setGameIDs] = useState()
+  var [trackIDs, setTrackIDs] = useState()
+  var [nontrackIDs, setNontrackIDs] = useState()
   var [requestsUsed, setRequestsUsed] = useState()
   var [marketKey, setMarketKey] = useState(defaultMarket)
   var [sportKey, setSportKey] = useState(defaultSport)
   var [loading, setLoading] = useState(false)
   var [allBooks, setAllBooks] = useState(false)
+  var [copyCSV, setCopyCSV] = useState()
+  var [csvConfirmation, setCsvConfirmation] = useState(false)
 
+  const [, updateIDstates] = React.useState();
+  const forceUpdateID = React.useCallback(() => updateIDstates({}), []);
+ 
 
   var gameDictParsed = []
 
@@ -50,23 +62,29 @@ function App() {
           }
         }).then(res => res.text()).then(
           data => {
-            const json_parsed = JSON.parse(data); // data = [gameDict, reqUsed]
+            const json_parsed = JSON.parse(data); // data = [gameDict, reqUsed, gamesCSV]
             setLoading(false)
             
-            setRequestsUsed(json_parsed[1])
-            
             gameDictParsed = json_parsed[0];
+            setRequestsUsed(json_parsed[1])
+            let currentCSV = json_parsed[2];
+            setCopyCSV(currentCSV)
+            
+
             if(marketKey === "h2h") {
               setMoneylinesData(gameDictParsed);
+              setMoneylinesCSV(currentCSV);
             } else if (marketKey === "spreads") {
               setSpreadsData(gameDictParsed);
+              setSpreadsCSV(currentCSV);
             } else if (marketKey === "totals") {
               setTotalsData(gameDictParsed);
+              setTotalsCSV(currentCSV);
             } else{
               console.log("MARKET ERROR WHEN SETTING gameDictParsed in App.js")
             }
             setCurrentOddsData(gameDictParsed);
-            updateLocalGameDicts(gameDictParsed)
+
 
             // get all game IDs
             var id_keys = Object.keys(gameDictParsed)
@@ -85,7 +103,17 @@ function App() {
     pullAllSaved().then(() =>{
       // console.log('5. back to useeeffect')
     })
+    pullAllCSV()
   }, []);
+
+  useEffect(() => {
+    if (typeof initTotals != "undefined"){
+      setLoading(false)
+      console.log("INIT TOTALS DONE")
+      changeOddsSettings();
+    }
+  }, [initTotals]);
+
 
   async function pullAllSaved() {
     console.log('2. pullAllSaved() async ...')
@@ -124,22 +152,21 @@ function App() {
         }
       }).then(res => res.text()).then(
         data => {
-          console.log("\t3.1 then => ", pullMkt)
+          // console.log("\t3.1 then => ", pullMkt)
           const gameDictParsed = JSON.parse(data); // data = gameDict
           
           if(pullMkt === "h2h") {
-            console.log("\t\t3.1a$  setting ML")
+            // console.log("\t\t3.1a$  setting ML")
             setMoneylinesData(gameDictParsed);
-            this.setState({moneylinesData:gameDictParsed}, () => {
-              console.log("\t\t\t3.1a ",moneylinesData)
-            })
-
+            setCopyCSV(moneylinesCSV)
           } else if (pullMkt === "spreads") {
-            console.log("\t\t3.1b$  setting spr")
+            // console.log("\t\t3.1b$  setting spr")
             setSpreadsData(gameDictParsed);
+            setCopyCSV(spreadsCSV)
           } else if (pullMkt === "totals") {
-            console.log("\t\t3.1c$  setting tot")
+            // console.log("\t\t3.1c$  setting tot")
             setTotalsData(gameDictParsed);
+            setCopyCSV(totalsCSV)
             setInitTotals(gameDictParsed);
           } else{console.log("pullMkt ERROR WHEN SETTING gameDictParsed in App.js")}
           // return gameDictParsed
@@ -151,16 +178,16 @@ function App() {
   }
 
   async function pullRequestsSaved() {
-    console.log('#. REQUESTS PULL...')
+    console.log('\tREQUESTS PULL...')
     try {
       await fetch("http://localhost:4000/oddsAPI/reqs")
       .then(res => res.text()).then(
       data => {
         const responseArr = JSON.parse(data); // data = [reqs]]
-        console.log('#. responseArr = ',responseArr)
-        console.log('#. responseArr typ = ',typeof responseArr)
+        // console.log('#. responseArr = ',responseArr)
+        // console.log('#. responseArr typ = ',typeof responseArr)
         const reqsPulled = responseArr[0]; // data = [reqs]]
-        console.log('#. REQUESTS = ',reqsPulled)
+        // console.log('#. REQUESTS = ',reqsPulled)
         setRequestsUsed(reqsPulled)
       })
     } catch (err) {
@@ -169,59 +196,173 @@ function App() {
     }
   }
 
+  async function pullAllCSV() {
+    console.log('\tCSV PULL...')
+    try {
+      await fetch("http://localhost:4000/oddsAPI/pullcsv",{headers:{"market":"h2h",}})
+      .then(res => res.text()).then(
+        responseStr => {
+          // console.log('#. pullcsv = ',responseStr)
+          // console.log('#. responseStr typ = ',typeof responseStr)
+          setMoneylinesCSV(responseStr)
+      })
+    } catch (err) {console.log("CATCH ERROR IN pullCSV function")}
+
+    try {
+      await fetch("http://localhost:4000/oddsAPI/pullcsv",{headers:{"market":"spreads",}})
+      .then(res => res.text()).then(
+        responseStr => {
+          setCopyCSV(responseStr) // special
+          setSpreadsCSV(responseStr)
+      })
+    } catch (err) {console.log("CATCH ERROR IN pullCSV function")}
+
+    try {
+      await fetch("http://localhost:4000/oddsAPI/pullcsv",{headers:{"market":"totals",}})
+      .then(res => res.text()).then(
+        responseStr => {
+          setTotalsCSV(responseStr)
+      })
+    } catch (err) {console.log("CATCH ERROR IN pullCSV function")}
+  }
+
 
   useEffect(() => {
+    console.log('\n\nLOADING...\n')
+    setLoading(true)
+    
     changeOddsSettings();
+    setTimeout(() => {
+      setLoading(false)
+      console.log('\n...DONE LOADING \n\n')
+    },2000)
   }, [marketKey, sportKey]);
 
-  useEffect(() => {
-    if (typeof initTotals != "undefined"){
-      setLoading(false)
-      console.log("INIT TOTALS DONE")
-      changeOddsSettings()
-    }
-  }, [initTotals]);
 
   function changeOddsSettings() {
     if (typeof initTotals == "undefined") {
-      console.log("\t\t--- 5X KEY CHANGE ABORTED CUS STILL INIT")
+      console.log("---KEY CHANGE ABORTED, STILL INIT")
     } else {
-      console.log("5. KEY CHANGE")
-      console.log("5. ",totalsData)
+      console.log("5.   KEY CHANGE")
+      // console.log("5. ",totalsData)
 
       var savedData;
+      var currCSV;
       if (marketKey === "h2h"){
-        console.log("\t5. Switching to saved ML")
+        console.log("\tSwitching to saved ML")
         savedData = moneylinesData
+        currCSV = moneylinesCSV
       } else if (marketKey === "spreads"){
-        console.log("\t5. Switching to saved spreads")
+        console.log("\tSwitching to saved spreads")
         savedData = spreadsData
+        currCSV = spreadsCSV
       } else if (marketKey === "totals"){
-        console.log("\t5. % Switching to saved totals")
+        console.log("\tSwitching to saved totals")
         savedData = totalsData
+        currCSV = totalsCSV
       } else {
         console.log("BIGERROR no market defined in changed odds settings")
       }
 
-      console.log("\t5%  ",savedData)
 
+      // console.log("\t5% savedData  ",savedData)
+
+      setCopyCSV(currCSV)
       setCurrentOddsData(savedData)
-      setGameIDs(Object.keys(savedData));
+      let ids = Object.keys(savedData)
+      setGameIDs(ids);
+      pullTracking(marketKey, ids)
+
     }
   }
-  function updateLocalGameDicts(gameDictParsed) {
-    if (marketKey === "h2h"){
-      console.log("Updating saved ML")
-      setMoneylinesData(gameDictParsed)
-    } else if (marketKey === "spreads"){
-      console.log("Updating saved spreads")
-      setSpreadsData(gameDictParsed)
-    } else if (marketKey === "totals"){
-      console.log("Updating saved totals")
-      setTotalsData(gameDictParsed)
-    } 
+  
+  async function pullTracking(mkt, game_ids) {
+    console.log('\tpulling tracking dict...',mkt)
+    try {
+    await fetch("http://localhost:4000/oddsAPI/pulltracking",{
+      headers:{
+        "market":mkt,
+      }
+    })
+    .then(res => res.text()).then(
+        data => {
+        const trackingArrParsed = JSON.parse(data); // data = gameDict
+        
+        console.log("\n\n% Pulled trackingArr:")
+        let updatedTrackArr = [] // delete past games
+        for (let i=0; i < trackingArrParsed.length; i++) {
+          if (game_ids.includes(trackingArrParsed[i])){
+            updatedTrackArr.push(trackingArrParsed[i])
+          } 
+        }
+
+        storeTracking(updatedTrackArr)
+        setTrackIDs([...updatedTrackArr])
+    })
+    } catch (err) {
+        console.log(err.message)
+        console.log("CATCH ERROR IN pullTracking function")
+    }
   }
 
+  useEffect (() => {
+    if (gameIDs && trackIDs) {
+        let new_nontrack = []
+        for (let i=0; i < gameIDs.length; i++) {
+            let cur_id = gameIDs[i]
+            if (trackIDs.includes(cur_id) === false)  {
+                new_nontrack.push(cur_id)
+            }
+        }
+        setNontrackIDs(new_nontrack)
+    }
+    // forceUpdateID()
+
+  },[trackIDs, gameIDs])
+
+  function toggleTrack(id) {
+    let arr = trackIDs;
+    if (arr.includes(id)){
+      const idx = arr.indexOf(id);
+      arr.splice(idx, 1); // 2nd parameter means remove one item only
+      setTrackIDs([...arr])
+    } else {
+      arr.push(id)
+      setTrackIDs([...arr])
+    }
+    storeTracking(arr)
+    setTimeout(() => {
+      setLoading(false)
+    }, 500)
+  }
+
+  async function storeTracking(storeArr) {
+    console.log('### STORING track arr...', marketKey)
+    try {
+      await fetch("http://localhost:4000/oddsAPI/storetracking",{
+        method: "POST",
+        headers: { 
+          "arr" : JSON.stringify(storeArr) ,
+          "market" : marketKey
+        }
+      })
+      .then(res=>res.json())
+    } catch (err) {
+        console.log(err.message)
+        console.log("CATCH ERROR IN storeTracking function")
+    }
+  }
+  
+  function handleCsvClick() {
+    // let csv_text = "DAL,4.5,4\nWAS,-4.5,-4"
+    navigator.clipboard.writeText(copyCSV)
+    // console.log(copyCSV)
+    // navigator.clipboard.writeText(csv_text)
+    setCsvConfirmation(true)
+    setTimeout(() => {
+      setCsvConfirmation(false)
+    }, 1000)
+  }
 
   return (
     <div className="App">
@@ -230,30 +371,49 @@ function App() {
       ) : (
         <></>
       )}
+
+      {csvConfirmation ? (
+        <CsvConfirmation></CsvConfirmation>
+      ) : (
+        <></>
+      )}
       
-      {/* <div  className="lineGraphContainer">
-        <LineGraph chartData={{times:[],odds:{}}}></LineGraph>
-      </div> */}
       
-      <div style={{height:"1em"}}></div>
-      <h1>MY ODDS SCREEN :)</h1>
 
       <div id="main-content">
-        <OddsTypeBar 
-          changeMarket={setMarketKey} 
-          changeSport={setSportKey} 
-          setAllBooks={setAllBooks} 
-          refreshOdds={refreshOdds}
-          reqUsed={requestsUsed}
-        ></OddsTypeBar>
+        <div id="fixedContainer">
+
+          <div style={{height:"1em"}}></div>
+          <h1>MY ODDS SCREEN :)</h1>
+
+          <div id="buttonsContainer">
+            <OddsTypeBar 
+              changeMarket={setMarketKey} 
+              changeSport={setSportKey} 
+              setAllBooks={setAllBooks} 
+              refreshOdds={refreshOdds}
+              reqUsed={requestsUsed}
+            ></OddsTypeBar>
+
+            <button id="csvBtn" 
+              onClick={handleCsvClick}
+            >Copy CSV</button>
+          </div>
+
+          <OddsTableHeader myBooks={myBooks}></OddsTableHeader>
+
+        </div>
         
         <OddsTable 
           currentOddsData={currentOddsData} 
-          gameIDs={gameIDs} 
+          trackIDs={trackIDs} 
+          nontrackIDs={nontrackIDs} 
           myBooks={myBooks}
           marketKey={marketKey}
           sportKey={sportKey}  
+          toggleTrack={toggleTrack}
         ></OddsTable>
+
       </div>
 
 

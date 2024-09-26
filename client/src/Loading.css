@@ -5,13 +5,13 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 111;
     opacity: .5;
     animation: fade .8s infinite alternate
 }
 .bounceText{
-    font-size: 3em;
-    margin-top: 45vh;
+    font-size: 10em;
+    margin-top: 33vh;
     animation: bounce .4s infinite alternate
 }
 

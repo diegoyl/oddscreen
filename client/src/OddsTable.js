@@ -1,23 +1,28 @@
 import './OddsTable.css';
 import GameComponent from './GameComponent.js';
-import OddsTableHeader from './OddsTableHeader.js';
 import {useState, useEffect} from 'react'
 import Loading from './Loading.js';
 
-function OddsTable({currentOddsData, gameIDs, myBooks, marketKey, sportKey}) {
+function OddsTable({currentOddsData, trackIDs, nontrackIDs, myBooks, marketKey, sportKey, toggleTrack}) {
     var [loading, setLoading] = useState(false)
     var [initializing, setInitializing] = useState(true)
     var [wantDict, setWantDict] = useState()
-
+    
     useEffect(() => {
-        console.log("....populating wanted")
-        pullWantDict()
+        console.log("\tOddsTable populating wanted")
+        pullWantDict(marketKey)
     },[])
+    
 
-    async function pullWantDict() {
-        console.log('%. pulling wanted dict...')
+
+    async function pullWantDict(mkt) {
+        console.log('\tpulling wanted dict...')
         try {
-        await fetch("http://localhost:4000/oddsAPI/pullwantdict",{})
+        await fetch("http://localhost:4000/oddsAPI/pullwantdict",{
+            headers:{
+              "market":mkt,
+            }
+        })
         .then(res => res.text()).then(
             data => {
             const wantDictParsed = JSON.parse(data); // data = gameDict
@@ -35,8 +40,9 @@ function OddsTable({currentOddsData, gameIDs, myBooks, marketKey, sportKey}) {
 
 
 
+
     function updateWantDict(newOdds, game_id) {
-        if (initializing == true){
+        if (initializing === true){
             console.log('initializing want dict')
         } else {
             console.log('NOT initializing want dict')
@@ -45,21 +51,21 @@ function OddsTable({currentOddsData, gameIDs, myBooks, marketKey, sportKey}) {
             wantDict[game_id] = newOdds
             console.log("2. ",wantDict)
     
-            storeWantDict(wantDict)
+            storeWantDict(wantDict, marketKey)
     
             setTimeout(() => {
                 setLoading(false)
-            }, 300)
+            }, 500)
         }
     }
 
-    async function storeWantDict(wantDict) {
-      console.log('### STORING WANT DICT...')
+    async function storeWantDict(wantDict, mkt) {
+      console.log('### STORING WANT DICT...',mkt)
       console.log(wantDict)
       try {
         await fetch("http://localhost:4000/oddsAPI/wantdict",{
           method: "POST",
-          headers: { "dict" : JSON.stringify(wantDict) }
+          headers: { "dict" : JSON.stringify(wantDict) , "market":mkt}
         })
         .then(res=>res.json())
       } catch (err) {
@@ -77,23 +83,58 @@ function OddsTable({currentOddsData, gameIDs, myBooks, marketKey, sportKey}) {
             <></>
         )}
 
-        <OddsTableHeader myBooks={myBooks}></OddsTableHeader>
+        {/* <div>TRACKING</div> */}
         
-        {(typeof currentOddsData === 'undefined' || Object.keys(currentOddsData).length < 1 ) ? (
+        {(typeof currentOddsData === 'undefined' || !trackIDs ) ? (
             <p>Loading Games...</p>
             ): (
                 <>
-                {gameIDs.map(game_id => (
-                    <GameComponent key={game_id} 
-                    game_id={game_id} 
-                    oddsData={currentOddsData[game_id]} 
-                    myBooks={myBooks}
-                    marketKey={marketKey}
-                    sportKey={sportKey}
-                    updateWantDict={updateWantDict}
-                    wantOdds={wantDict[game_id]}
-                    ></GameComponent>
-                ))}
+                {trackIDs.map(function(game_id) {
+                    if (currentOddsData[game_id]) {
+                        return (
+                                <GameComponent key={game_id} 
+                                game_id={game_id} 
+                                oddsData={currentOddsData[game_id]} 
+                                myBooks={myBooks}
+                                marketKey={marketKey}
+                                sportKey={sportKey}
+                                updateWantDict={updateWantDict}
+                                wantOdds={wantDict[game_id]}
+                                toggleTrack={toggleTrack}
+                                ></GameComponent>
+                            )
+
+                    }
+                    }
+                )}
+                </>
+            )
+        }
+        <div className="trackGap"></div>
+
+        {(typeof currentOddsData === 'undefined' || !nontrackIDs ) ? (
+            <p>Loading Games...</p>
+            ): (
+                <>
+
+                {nontrackIDs.map(function(game_id) {
+                    if (currentOddsData[game_id]) {
+                        return (
+                                <GameComponent key={game_id} 
+                                game_id={game_id} 
+                                oddsData={currentOddsData[game_id]} 
+                                myBooks={myBooks}
+                                marketKey={marketKey}
+                                sportKey={sportKey}
+                                updateWantDict={updateWantDict}
+                                wantOdds={wantDict[game_id]}
+                                toggleTrack={toggleTrack}
+                                ></GameComponent>
+                            )
+
+                    }
+                    }
+                )}
                 </>
             )
         }

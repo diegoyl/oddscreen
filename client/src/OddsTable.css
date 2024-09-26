@@ -1,9 +1,15 @@
 
 #oddsTableContainer {
     /* background-color: rgba(138, 150, 241, 0.177); */
-    width: 100%;
+    width: var(--oddsTableWidth);
     min-height: 1em;
     padding: 0;
     margin: 0 auto;
+    margin-top: 15em;
+    position: relative;
   
-  }
+}
+
+.trackGap {
+  height: 2em;
+}

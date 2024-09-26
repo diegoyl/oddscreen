@@ -1,0 +1,26 @@
+#csvConfirmationContainer {
+    background-color: var(--c-app-highlight);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    opacity: 0;
+    animation: csvfade 1s alternate
+}
+.csvConfirmText{
+    font-size: 10em;
+    margin-top: 33vh;
+    animation: bounce .5s infinite alternate
+}
+
+@keyframes csvfade {
+    33% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

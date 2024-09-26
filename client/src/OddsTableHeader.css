@@ -1,56 +1,58 @@
-#fullTableRow  .tableHeader{
+#tableHeader{
     height: var(--tableRowHtHdr);
     /* padding-bottom: 5rem; */
     /* padding: 0; */
     margin-bottom: 2em;
+    width: var(--main-width);
+    width: var(--oddsTableWidth);
 }
-.tableHeader .column{
+#tableHeader .column{
     margin-bottom: .5rem;
     border-radius: calc(var(--tableRowHtHdr)/3);
 }
-.tableHeader .column{
+#tableHeader .column{
     background-color: transparent;
 }
-.tableHeader p{
+#tableHeader p{
     font-size: var(--fsz-table);
     font-family: Mainfont;
 }
-.tableHeader .c-team {
+#tableHeader .c-team {
     height: var(--tableRowHtHdr);
 }
-.tableHeader .column p{
+#tableHeader .column p{
     line-height: var(--tableRowHtHdr);
 }
 
-#fanduel{
+#tableHeader #fanduel{
     background-color: #0b70ff;
     color: white;
 }
-#draftkings{
+#tableHeader #draftkings{
     background-color: #5DAF10;
     color: rgb(18, 18, 19);
 }
-#betmgm{
+#tableHeader #betmgm{
     background-color: #B19560;
     color: black;
 }
-#williamhill_us{
+#tableHeader #williamhill_us{
     background-color: #083331;
     color: #C5A461;
 }
-#espnbet{
+#tableHeader #espnbet{
     background-color: #1ae3be;
     color: #011a46;
 }
-#ballybet{
+#tableHeader #ballybet{
     background-color: #4500db;
     color: #ff3d3d;
 }
-#betrivers{
+#tableHeader #betrivers{
     background-color: #F7B41D;
     color: #0A202F;
 }
-#fliff{
+#tableHeader #fliff{
     background-color: #230c93;
     color: #27DF44;
 }

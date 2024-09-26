@@ -8,7 +8,12 @@ import HoldBox from './HoldBox.js';
 import ChartBox from './ChartBox.js';
 import WantBox from './WantBox.js';
 
-function GameComponent({game_id, oddsData, myBooks, marketKey, sportKey, updateWantDict, wantOdds}) {
+function GameComponent({game_id, oddsData, myBooks, marketKey, sportKey, updateWantDict, wantOdds, toggleTrack}) {
+    // console.log("$ ", oddsData)
+    if (oddsData === "undefined" || oddsData === undefined) {
+        console.log("$ UNDEFINED ", oddsData)
+        console.log("$ UNDEFINED ", game_id)
+    }
     var home = oddsData["home"]
     var away = oddsData["away"]
     var odds = oddsData["odds"]
@@ -23,8 +28,8 @@ function GameComponent({game_id, oddsData, myBooks, marketKey, sportKey, updateW
 
 
     return (
-      <div id="fullTableRow" className="tableRow-content">
-        <div className="column c-date c-date-content">
+      <div id="" className="fullTableRow tableRow-content">
+        <div className="column c-date c-date-content" onClick={() => toggleTrack(game_id)}>
             <p className="">{times["weekday"]}</p>
             <p className="">{times["time"]}</p>
         </div>

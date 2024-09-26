@@ -20,6 +20,8 @@ const TotalsCollection = schemas["TotalsCollection"]
 const RawData = schemas["RawData"]
 const CurrentGameDicts = schemas["CurrentGameDicts"]
 const WantDict = schemas["WantDict"]
+const TrackingArr = schemas["TrackingArr"]
+const CsvData = schemas["CsvData"]
 
 const dbOptions = {}
 mongoose.connect(process.env.DB_URI, dbOptions)
@@ -39,7 +41,7 @@ const PULL_ALL_US = false;
 const GET_RAW_DATA = false;
 var REAL_DATA = false;
 REAL_DATA = true;
-const LESS_TOTAL_GAMES = 16
+const LESS_TOTAL_GAMES = 32
 
 // INITIAL VALUES
 const defaultMarketBackup = "h2h"
@@ -52,28 +54,90 @@ const defaultSportBackup = "americanfootball_nfl"
 router.post('/wantdict', function(req, res,next) {
     console.log("\n\n\n$ NEW POST REQUEST FOR WANT DICT w:")
     const new_data = req.headers["dict"];
+    const mkt = req.headers["market"];
 
     console.log("\n\treq.headers[dict]: ")
     console.log(new_data)
 
-    WantDict.findOneAndUpdate(
-        {_id:"wantDict"},
-        { $set: { data: new_data }}
-    ).then(() => {console.log("WANT DICT STORED SUCCESS!")})
-    .catch(err=>{console.log(err); res.json("Error! cannot save")})
+    if (mkt == "h2h") {
+        WantDict.findOneAndUpdate(
+            {_id:"wantDict"},
+            { $set: { "data.h2h": new_data }}
+        ).then(() => {console.log("WANT h2h STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } else if (mkt == "spreads") {
+        WantDict.findOneAndUpdate(
+            {_id:"wantDict"},
+            { $set: { "data.spreads": new_data }}
+        ).then(() => {console.log("WANT spr STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } else if (mkt == "totals") {
+        WantDict.findOneAndUpdate(
+            {_id:"wantDict"},
+            { $set: { "data.totals": new_data }}
+        ).then(() => {console.log("WANT tot STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } 
+});
+
+router.post('/storetracking', function(req, res,next) {
+    const new_data = req.headers["arr"];
+    const mkt = req.headers["market"];
+    console.log("\n\n\n$ NEW POST REQUEST FOR TRK ARR w: ", mkt)
+    if (mkt == "h2h") {
+        TrackingArr.findOneAndUpdate(
+            {_id:"trackingIDs"},
+            { $set: { "data.h2h": new_data }}
+        ).then(() => {console.log("TRK h2h STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } else if (mkt == "spreads") {
+        TrackingArr.findOneAndUpdate(
+            {_id:"trackingIDs"},
+            { $set: { "data.spreads": new_data }}
+        ).then(() => {console.log("TRK spr STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } else if (mkt == "totals") {
+        TrackingArr.findOneAndUpdate(
+            {_id:"trackingIDs"},
+            { $set: { "data.totals": new_data }}
+        ).then(() => {console.log("TRK tot STORED SUCCESS!")}).catch(err=>{console.log(err); res.json("Error! cannot save")})
+    } 
 });
 
 router.get('/pullwantdict', async function(req, res, next) {
     console.log("\n\n\n$ NEW PULL REQUEST FOR WANT DICT");
+    var pull_market = req.headers["market"] 
 
     await WantDict.findById("wantDict")
     .then(function(mongo_response){
-        var pulledData = mongo_response["data"]
-        console.log("\tPULLED DATA FROM wantdict:\n\t\t",pulledData)
-        res.send(pulledData); // already processed
+        var pulledData = mongo_response["data"][0]
+        var marketSpecific = pulledData[pull_market]
+        console.log("\tPULLED DATA FROM wantDict: \n\t",marketSpecific)
+
+        res.send(marketSpecific); // already processed
     })
 });
 
+router.get('/pulltracking', async function(req, res, next) {
+    var pull_market = req.headers["market"] 
+    console.log("\n\n\n$ NEW PULL REQUEST FOR TRACKING ARR w ",pull_market);
+
+    await TrackingArr.findById("trackingIDs")
+    .then(function(mongo_response){
+        var pulledData = mongo_response["data"][0]
+        var marketSpecific = pulledData[pull_market]
+        console.log("\tPULLED DATA FROM trackingIDs: \n\t",marketSpecific)
+
+        res.send(marketSpecific); // already processed
+    })
+});
+
+
+router.get('/pullcsv', async function(req, res,next) {
+    var pull_market = req.headers["market"] 
+    console.log("\n\n\n$ NEW PULL REQUEST FOR CSV DATA w ",pull_market);
+
+    await CsvData.findById(pull_market)
+    .then(function(mongo_response){
+        var pulledData = mongo_response["data"]
+        res.send(pulledData); // already processed
+    })
+})
 
 
 ////////////
@@ -89,14 +153,15 @@ router.get('/reqs', async function(req, res,next) {
     })
 })
 
+
 ////////////
 // PULL SAVED GameDicts GET root
 ////////////
 router.get('/gamedict', async function(req, res,next) {
     var pull_market = req.headers["market"] 
 
-    console.log("\n\n\n$ NEW PULL REQUEST FOR SAVED GAME DICTS")
-    console.log("\twith header: ",pull_market )
+    // console.log("\n\n\n$ NEW PULL REQUEST FOR SAVED GAME DICTS")
+    // console.log("\twith header: ",pull_market )
 
     // PULL SAVED DICT DATA
     const pulledGame = await MLCollection.findById("CAZUNAM");
@@ -115,7 +180,7 @@ router.get('/gamedict', async function(req, res,next) {
 ////////////
 router.get('/', async function(req, res,next) {
     console.log("\n* NEW GET REQUEST TO oddsAPI.js")
-    console.log("\twith headers: ",req.headers)
+    // console.log("\twith headers: ",req.headers)
 
     // TODO: ONLY PROCEED IF CALL WAS NOT MADE WITHIN LAST MINUTE, OTHEREWSIE SEND STORED RAW DATA
 
@@ -198,7 +263,7 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
         
         // TEXT FORMATTING + ADDING CHART DATA
         console.log("5. Finishing GameDict")
-        var finalGameDict = await finishGameDict(gameDictParsed, market)
+        const finalGameDict = await finishGameDict(gameDictParsed, market)
         // .then(function(finalGameDict) {
         //     // console.log(finalGameDict)
     
@@ -211,11 +276,15 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
         console.log("6. Store full gameDict in Mongo")
         await storeGameDict(finalGameDict, market)
 
+        console.log("\n7. buildAndStoreCSV called")
+        const gamesCSV = buildAndStoreCSV(gameDictParsed, market)
 
-        console.log("7. gameDictParsed being sent")
+
+        console.log("8. gameDictParsed being sent")
         console.log('\tAPI Requests',parseInt(used),"/",parseInt(remaining)+parseInt(used))
-        res.send([finalGameDict, used]);
-        console.log("8. ALL DONE YAY!\n\n")
+        res.send([finalGameDict, used, gamesCSV]);
+        console.log("9. ALL DONE YAY!\n\n")
+        console.log(finalGameDict)
 
     }
 }
@@ -274,12 +343,82 @@ async function storeGameDict(game_dict, market){
     
 }
 
+function buildAndStoreCSV(game_dict, market) {
+    let csv_string = "TEAM,FD,DK,CES,MGM,E,BB,FLF\n"
+    let all_book_ids = ["fanduel","draftkings","williamhill_us","betmgm","espnbet","ballybet","fliff"]
+    let weekBroken = false
+
+    var game_ids = Object.keys(game_dict)
+    for (let i=0; i < game_ids.length; i++) {
+        let curID = game_ids[i]
+        let game = game_dict[curID]
+
+        // CHECK FOR WEEK CHANGE
+        if (!weekBroken){
+            var tuesday = new Date();
+            tuesday.setDate(tuesday.getDate() + (2 + 7 - tuesday.getDay()) % 7);
+            var mo = tuesday.getMonth()
+            if (mo < 10){mo = "0"+mo;}
+            var threshold_date = ""+tuesday.getFullYear() + mo + tuesday.getDate() + "12"
+            
+            let game_date = parseInt(game["times"]["full"]) // 2024081220 YYYYMMDDHH
+            if (game_date > threshold_date) {
+                // add week break
+                csv_string += "\nNEW WEEK\n"
+                weekBroken = true
+            }
+        }
+        
+        let home_str = game["home"] + ","
+        let away_str = game["away"] + ","
+        
+        let odds = game["odds"]
+        let cur_book_ids = Object.keys(odds)
+
+        for (let j=0; j < all_book_ids.length; j++) {
+            let cur_book = all_book_ids[j]
+            if (cur_book_ids.includes(cur_book)){
+                let printodd1, printodd2;
+                if (market == "h2h"){
+                    printodd1 = odds[cur_book][0]
+                    printodd2 = odds[cur_book][1] 
+                } else if (market == "spreads"){
+                    printodd1 = odds[cur_book][2]
+                    printodd2 = odds[cur_book][3] 
+                } else if (market == "totals"){
+                    printodd1 = odds[cur_book][2]
+                    printodd2 = printodd1
+                }
+
+                home_str += printodd1 + ","
+                away_str += printodd2 + "," 
+            } else{
+                home_str += " ,"
+                away_str += " ,"
+            }  
+        }
+        let game_str = home_str + "\n" + away_str + "\n" 
+        csv_string += game_str
+    }
+    storeCSV(csv_string, market)
+    return csv_string
+}
+async function storeCSV(csv_string, market){
+    CsvData.findOneAndUpdate(
+        {_id: market},
+        { $set: {data: csv_string}}
+    ).then(() => {
+        console.log('\t- 7?. Finished storing Csv Data')
+    })
+}
+
 
 async function finishGameDict(game_dict, market) {
     const CurrentCollection = collectionObjects[market]
     var game_ids = Object.keys(game_dict)
     for (let i=0; i < game_ids.length; i++) {
         let game_id = game_ids[i]
+        // console.log("$ ",game_dict[game_id]["home"])
         
     ///////////////////////////////
     // FORMAT INTO AMERICAN STRINGS
@@ -313,6 +452,7 @@ async function finishGameDict(game_dict, market) {
     ///////////////////////////////
     // ADD CHART DATA
     ///////////////////////////////
+        const MAX_ODDS_HIST_LENGTH = 10
         await CurrentCollection.findById(game_id)
         .then(function(pulledGame){
             const pulledTimes = pulledGame["pullTimes"]
@@ -333,9 +473,9 @@ async function finishGameDict(game_dict, market) {
             let times20 = pulledTimes
             let odds20 = pulledOddsHistory
 
-            if (times20.length > 20) {
-                times20 = times20.slice(-20) // TODO
-                odds20 = odds20.slice(-20) // TODO
+            if (times20.length > MAX_ODDS_HIST_LENGTH) {
+                times20 = times20.slice(-MAX_ODDS_HIST_LENGTH) // TODO
+                odds20 = odds20.slice(-MAX_ODDS_HIST_LENGTH) // TODO
             } 
             let unixTimes = []
             for (let i=0; i < times20.length; i++){
@@ -361,7 +501,7 @@ async function finishGameDict(game_dict, market) {
 
 const marketScales = {
     "h2h": -5,
-    "spreads": -1,
+    "spreads": 2,
     "totals": 2,
 }
 
@@ -376,7 +516,8 @@ function getDirChange(unixTimes,odds20,market) {
     for (let i=0; i < unixTimes.length-1; i++){
         let t_delta = (curTime - unixTimes[i]) / 60000 // converts ms to minutes
         let t_delta_days = t_delta / 1440 // converts min to days
-        let weight = 1.1 / (1 + 2.71**(0.8*t_delta_days - 2))
+        // let weight = 1.1 / (1 + 3**(5*t_delta_days - 2))
+        let weight = .1 / (t_delta_days + .1)
         let val = odds20[i] * weight
         weight_sum += weight
         val_sum += val
@@ -396,13 +537,22 @@ function processData(JSON_data, market){
     console.log("3. processData running with mkt:",market)//,JSON_data["0e92fbe2ff57b1a7fd753bc2aea3edd2"])//["bookmakers"][0]["markets"][0]["outcomes"])
     let all_games_dict = {};
     let total_games = Math.min(JSON_data.length, 32) // so it doesnt pull further than 2 weeks
-    total_games = LESS_TOTAL_GAMES || total_games 
+    total_games = total_games 
+    // console.log("\n\n\n&&&& YEET\n", JSON_data,"\n\n");
+
     for (let game_idx=0; game_idx < total_games; game_idx++){
         let game_raw = JSON_data[game_idx];
         
         // BUILD DICT FOR APP.JS
         var vals_dict = {};
-        vals_dict["times"] = convertUTCtime(game_raw["commence_time"])
+        try {
+            vals_dict["times"] = buildTimeDict(game_raw["commence_time"])
+        }
+        catch {
+            // vals_dict["times"] = buildTimeDict(game_raw["commence_time"])
+            vals_dict["times"] = {"full":"","time":"LIVE","weekday":""}
+            // console.log("\n\n\n&&&& YEET\n", game_raw,"\n\n");
+        }
         vals_dict["home"] = translateName(game_raw["home_team"],toMy3Code) 
         vals_dict["away"] = translateName(game_raw["away_team"],toMy3Code)         
 
@@ -441,7 +591,12 @@ function buildOddsDict(bookmakers, home_name, mkt) {
     // ASSUME HOME TEAM LISTED FIRST
     let home_idx = 0
     let away_idx = 1
-    let homeTeamCheck = bookmakers[0]["markets"][0]["outcomes"][0]["name"]
+    let homeTeamCheck = ""
+    try {
+        homeTeamCheck = bookmakers[0]["markets"][0]["outcomes"][0]["name"]
+    }
+    catch {
+    }
     if (homeTeamCheck != home_name) {
         home_idx = 1
         away_idx = 0
@@ -456,7 +611,7 @@ function buildOddsDict(bookmakers, home_name, mkt) {
         let book_data = bookmakers[d];
         let book_id = book_data["key"];
         // skip unwanted books
-        if (myBooks.includes(book_id)){
+        if (myPlusSharpBooks.includes(book_id)){
             let odds_data = book_data["markets"][0]["outcomes"]
             if (mkt=="h2h"){
                 let odd1 = odds_data[home_idx]["price"];
@@ -469,8 +624,8 @@ function buildOddsDict(bookmakers, home_name, mkt) {
                 let spread2 = odds_data[away_idx]["point"];
                 odds_dict[book_id] = [odd1, odd2, spread1, spread2]
             } else if (mkt=="totals"){
-                let over = odds_data[home_idx]["price"];
-                let under = odds_data[away_idx]["price"];
+                let over = odds_data[0]["price"];
+                let under = odds_data[1]["price"];
                 let total = odds_data[home_idx]["point"];
                 odds_dict[book_id] = [over, under, total] 
             } else{
@@ -481,6 +636,7 @@ function buildOddsDict(bookmakers, home_name, mkt) {
 
     return odds_dict
 }
+
 function buildCalcsDict(odds_dict, mkt) {
     // MAKE CALCULATIONS
     var calcs_dict = {};
@@ -600,7 +756,7 @@ function getBestLine(odds_dict, mkt) {
     }
     
     // console.log("\n\nRESPONSE")
-    console.log([[best1,best2], bestBooks1, bestBooks2])
+    // console.log([[best1,best2], bestBooks1, bestBooks2])
     return [[best1,best2], bestBooks1, bestBooks2]
 }
 
@@ -799,17 +955,28 @@ const myBooks = [
     "fliff",
     "fanduel"
 ]
-const myplussharpBooks = [
-    // my books
+const sharpBooks = [
     "fanduel",
+    "draftkings",
+    "williamhill_us",
+    "betmgm",
+    // just sharp
+    "bovada",
+    "lowvig",
+    "betonlineag"
+]
+const myPlusSharpBooks = [
+    // my books
     "draftkings",
     "williamhill_us",
     "betmgm",
     "espnbet",
     "ballybet",
-    "betrivers",
+    // "betrivers",
     "fliff",
+    "fanduel",
     // sharp tracking
+    "bovada",
     "lowvig",
     "betonlineag"
 ]
@@ -878,8 +1045,14 @@ function american(num) {
 }
 
 const weekdays = ['SUN','MON','TUE','WED','THU','FRI','SAT']
-function convertUTCtime(utc_time){
+function buildTimeDict(utc_time){
     var et_time = new Date(utc_time)
+    // var current_time = new Date().getTime().toISOString() // TODO
+
+    // console.log("\nGET TIME:")
+    // console.log("\tGAME: ", et_time)
+    // console.log("\tCURR: ", current_time)
+    // console.log("\tC>G: ", et_time < current_time)
 
     var yr = et_time.getFullYear()
     var mo = et_time.getMonth()
@@ -902,8 +1075,10 @@ function convertUTCtime(utc_time){
         "weekday":weekday,
         "time":time
     }
+
     return timeDict
 }
+
 
 function getRawDataMarketType(data){
     var k = Object.keys(data)[0]
@@ -925,11 +1100,14 @@ function calcAvgOdd(odds, market){
     // BUILD ARRAYS FOR EASIER ANALYSIS
     for (let i=0; i < data_depth; i++){
         for (let b=0; b < book_ids.length; b++){
-            let num = odds[book_ids[b]][i]
-            if (i < 2){ // convert odds to probs
-                num = odd2prob(num)
+            if (sharpBooks.includes(book_ids[b])) {
+                // console.log(book_ids[b])
+                let num = odds[book_ids[b]][i]
+                if (i < 2){ // convert odds to probs
+                    num = odd2prob(num)
+                }
+                arrData[i].push(num)
             }
-            arrData[i].push(num)
         }
     }
     // console.log("\n\n=============================\nCALCULATING AVG WITH ODDS:\n",odds)

@@ -1,12 +1,12 @@
 :root {
-  --col-width-scale: 100/71.5; /* = 100/sum  */
+  --col-width-scale: 100/55.5; /* = 100/sum  */
   --c-date-width: 3.5%;
   --c-team-width: 7%;
   --c-want-width: 3%;
   --c-best-width: 3%;
   --c-hold-width: 3%;
-  --c-chart-width: 10%;
-  --c-book-width: 6%; /* x7 */
+  --c-chart-width: 8%;
+  --c-book-width: 4%; /* x7 */
 }
 
 /* SHADING FOR DEBUGGING */
@@ -19,10 +19,11 @@
 
 
 
-#fullTableRow{
+.fullTableRow{
   text-align: left;
   /* outline: rgb(255, 9, 9) .5px dashed; */
   width: 100%;
+  
   margin: var(--odds-borderWH) auto;
   color: var(--c-odds-text);
   white-space: nowrap;
@@ -83,6 +84,14 @@
 .c-date{
   width: calc(var(--c-date-width)*var(--col-width-scale));
   min-width: 2rem;
+  transition: .5s ease-in-out;
+  border-radius: var(--corner-radius) 0 0 var(--corner-radius);
+
+}
+.c-date:hover {
+  background-color: white;
+  color: var(--c-app-bg);
+  cursor: pointer;
 }
 .c-team{
   width: calc(var(--c-team-width)*var(--col-width-scale));

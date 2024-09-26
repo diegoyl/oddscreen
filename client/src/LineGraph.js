@@ -1,4 +1,3 @@
-import {useState, useEffect} from 'react';
 import './ChartBox.css';
 import {Line} from 'react-chartjs-2'  
 import {Chart as ChartJS, 
@@ -99,7 +98,7 @@ function LineGraph({chartData, chartMax, chartMin, dirLineColor, dirPointColor})
     }
 
     const pointStyle = "circle"
-    const tension = .5
+    const tension = .3
     const pointBorderWidth = 0
     const spanGaps = true
 
