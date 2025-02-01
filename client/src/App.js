@@ -10,6 +10,7 @@ import './App.css';
 
 const myBooks = [
     // my books for ui, no sharp books displayed
+    "betonlineag",
     "fanduel",
     "draftkings",
     "williamhill_us",

@@ -56,8 +56,8 @@ router.post('/wantdict', function(req, res,next) {
     const new_data = req.headers["dict"];
     const mkt = req.headers["market"];
 
-    console.log("\n\treq.headers[dict]: ")
-    console.log(new_data)
+    // console.log("\n\treq.headers[dict]: ")
+    // console.log(new_data)
 
     if (mkt == "h2h") {
         WantDict.findOneAndUpdate(
@@ -284,7 +284,7 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
         console.log('\tAPI Requests',parseInt(used),"/",parseInt(remaining)+parseInt(used))
         res.send([finalGameDict, used, gamesCSV]);
         console.log("9. ALL DONE YAY!\n\n")
-        console.log(finalGameDict)
+        // console.log(finalGameDict)
 
     }
 }
@@ -303,7 +303,8 @@ async function storeHistoryData(game_dict, pullTime, market){
         let cur_game_id = game_ids[i]
         let odds = game_dict[cur_game_id]["odds"]
 
-        let average_odd = calcAvgOdd(odds, market)
+
+        let average_odd = calcAvgOdd(odds, market, cur_game_id)
 
 
         // CHECK IF GAME DOC EXISTS
@@ -517,15 +518,15 @@ function getDirChange(unixTimes,odds20,market) {
         let t_delta = (curTime - unixTimes[i]) / 60000 // converts ms to minutes
         let t_delta_days = t_delta / 1440 // converts min to days
         // let weight = 1.1 / (1 + 3**(5*t_delta_days - 2))
-        let weight = .1 / (t_delta_days + .1)
-        let val = odds20[i] * weight
+        let weight = .1 / (2*(t_delta_days) + .1)
+        let val = (odds20[i] - curOdd ) * weight
         weight_sum += weight
         val_sum += val
     }
     let w_avg = val_sum / weight_sum
-    let change = (curOdd - w_avg) / marketScale // negative to make down movement GOOD
+    let change = -w_avg // / marketScale // negative to make down movement GOOD
    
-    return change
+    return change*100
 }
 
 
@@ -953,13 +954,15 @@ const myBooks = [
     "ballybet",
     // "betrivers",
     "fliff",
-    "fanduel"
+    "fanduel",
+    "betonlineag"
 ]
 const sharpBooks = [
     "fanduel",
     "draftkings",
     "williamhill_us",
     "betmgm",
+    "espnbet",
     // just sharp
     "bovada",
     "lowvig",
@@ -1086,7 +1089,8 @@ function getRawDataMarketType(data){
     return m
 }
 
-function calcAvgOdd(odds, market){
+const TEST_ID = "NOLAR202411116"
+function calcAvgOdd(odds, market, cur_game_id){
     const diffScaling = 2;
     var book_ids = Object.keys(odds)
 
@@ -1124,6 +1128,11 @@ function calcAvgOdd(odds, market){
         let avg_prob = average([normp1,normp2_inv])
         final_avg = prob2odd(avg_prob)
     } else if (market == "spreads" || market == "totals"){
+        if (cur_game_id == TEST_ID) {
+            console.log("\n\nCALC AVG ODDSSSSS")
+            console.log(odds)
+            console.log("arrData: ",arrData)
+        }
         let adj_lines = [];
         for (let i=0; i < arrData[0].length; i++){
             let p1 = arrData[0][i]
@@ -1132,11 +1141,32 @@ function calcAvgOdd(odds, market){
             let normp2 = p2/ (p1 + p2)
             let normp2_inv = 1 - normp2
             let avg_p = average([normp1,normp2_inv])
-            let diff = 1 + (avg_p - 0.5) * diffScaling
-            let adjusted_line = diff * arrData[2][i]
+            let diff = (avg_p - 0.5) * 22
+            
+            let og_line = arrData[2][i]
+            let adjusted_line = og_line
+            if (og_line > 0) {
+                adjusted_line += -diff
+            } else {
+                adjusted_line += diff
+            }
             adj_lines.push(adjusted_line)
+
+            if (cur_game_id == TEST_ID) {
+                console.log("************")
+                console.log("ps: " ,p1," / ",p2)
+                console.log("avg_p: ",avg_p)
+                console.log("diff: ",diff)
+                console.log("adj_line: ",adjusted_line)
+            }
         }
         final_avg = average(adj_lines)
+
+        if (cur_game_id == TEST_ID) {
+            console.log("************")
+            console.log("adj_lines: ",adj_lines)
+            console.log("final_avg: ",final_avg)
+        }
     }
     return final_avg
 }

@@ -24,6 +24,10 @@
     line-height: var(--tableRowHtHdr);
 }
 
+#tableHeader #betonlineag{
+    background-color: #000000;
+    color: rgb(244, 51, 51);
+}
 #tableHeader #fanduel{
     background-color: #0b70ff;
     color: white;

@@ -2,6 +2,7 @@ import './GameComponent.css';
 import './OddsTableHeader.css';
 
 const bookNames = {
+    "betonlineag":"BOL",
     "fanduel":"FANDUEL",
     "draftkings":"DRAFTKINGS",
     "williamhill_us":"CAESARS",

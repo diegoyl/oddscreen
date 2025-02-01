@@ -48,7 +48,7 @@ function GameComponent({game_id, oddsData, myBooks, marketKey, sportKey, updateW
         </div>
         <div className="column c-chart c-chart-content c-full-height">
             {/* <p className="doubleRow">{calcs["avg"]}</p> */}
-            <ChartBox chartData={chartData} curAvg={calcs["avg"]}></ChartBox>
+            <ChartBox chartData={chartData} curAvg={calcs["avg"]} home={home} away={away}></ChartBox>
         </div>
         
         {marketKey==="h2h" && myBooks.map(book_id => (
