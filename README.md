@@ -1,6 +1,6 @@
 # My Odds Screen
 
-<img width="1457" alt="main page" src="./client/img/screenshot.jpg">
+<img width="1457" alt="main page" src="./client/img/main.jpg">
 <br>
 <img width="1457" alt="popup with details" src="./client/img/popup.jpg">
 
