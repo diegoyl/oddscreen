@@ -1,4 +1,4 @@
-# My Odds Screen
+# Live Odds Screen
 
 <img width="1457" alt="main page" src="./client/img/main.jpg">
 <br>
