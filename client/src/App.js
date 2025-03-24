@@ -63,6 +63,7 @@ function App() {
           }
         }).then(res => res.text()).then(
           data => {
+            console.log("\tDONE refreshing!")
             const json_parsed = JSON.parse(data); // data = [gameDict, reqUsed, gamesCSV]
             setLoading(false)
             
@@ -85,6 +86,7 @@ function App() {
               console.log("MARKET ERROR WHEN SETTING gameDictParsed in App.js")
             }
             setCurrentOddsData(gameDictParsed);
+            console.log("gameDictParsed ",gameDictParsed)
 
 
             // get all game IDs
@@ -102,7 +104,7 @@ function App() {
     console.log('1. UseEffect Initializing...')
     pullRequestsSaved()
     pullAllSaved().then(() =>{
-      // console.log('5. back to useeeffect')
+      console.log('5. back to useeeffect')
     })
     pullAllCSV()
   }, []);
@@ -192,8 +194,9 @@ function App() {
         setRequestsUsed(reqsPulled)
       })
     } catch (err) {
-        console.log(err.message)
+        // console.log(err.message)
         console.log("CATCH ERROR IN pullRequestsSaved function")
+        setRequestsUsed(0)
     }
   }
 
@@ -241,7 +244,8 @@ function App() {
 
 
   function changeOddsSettings() {
-    if (typeof initTotals == "undefined") {
+    // if (typeof initTotals == "undefined") {
+    if (false) {
       console.log("---KEY CHANGE ABORTED, STILL INIT")
     } else {
       console.log("5.   KEY CHANGE")
@@ -270,7 +274,14 @@ function App() {
 
       setCopyCSV(currCSV)
       setCurrentOddsData(savedData)
-      let ids = Object.keys(savedData)
+
+      let ids = []
+      try {
+        ids = Object.keys(savedData)
+      } catch {
+        console.log("NO IDs in cahgne OddsSetting")
+        console.log("\t",savedData)
+      }
       setGameIDs(ids);
       pullTracking(marketKey, ids)
 
@@ -303,10 +314,14 @@ function App() {
     } catch (err) {
         console.log(err.message)
         console.log("CATCH ERROR IN pullTracking function")
+        setTrackIDs([])
     }
   }
 
   useEffect (() => {
+    console.log("new nontrack ids")
+    console.log("\tGM: ",gameIDs)
+    console.log("\tTR: ",trackIDs)
     if (gameIDs && trackIDs) {
         let new_nontrack = []
         for (let i=0; i < gameIDs.length; i++) {

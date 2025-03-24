@@ -263,3 +263,78 @@ Format for class name is:
     background-color: #5A1414;
     color: #FFB612 ;
 }
+
+/* NCAAM */
+
+.BAMA_basketball_ncaab {
+    background-color: rgb(127, 5, 19);
+    color:rgb(246, 243, 237);
+}
+.ARIZ_basketball_ncaab {
+    background-color: rgb(220, 23, 23);
+    color:rgb(14, 35, 82);
+}
+.ARK_basketball_ncaab {
+    background-color: rgb(135, 13, 48);
+    color:white;
+}
+.AUB_basketball_ncaab {
+    background-color: rgb(0, 36, 86);
+    color:rgb(245, 103, 27);
+}
+.BAY_basketball_ncaab {
+    background-color: rgb(0, 94, 0);
+    color:rgb(255, 205, 25);
+}
+.DUKE_basketball_ncaab {
+    background-color: rgb(19, 75, 228);
+    color:white;
+}
+.FLA_basketball_ncaab {
+    background-color: rgb(35, 52, 201);
+    color:rgb(255, 126, 21);
+}
+.HOU_basketball_ncaab {
+    background-color: rgb(229, 35, 35);
+    color:white;
+}
+.ILL_basketball_ncaab {
+    background-color: rgb(239, 95, 11);
+    color:rgb(9, 30, 93);
+}
+.UK_basketball_ncaab {
+    background-color: rgb(0, 62, 185);
+    color:white;
+}
+.MD_basketball_ncaab {
+    background-color: rgb(209, 18, 18);
+    color:rgb(255, 218, 31);
+}
+.MICH_basketball_ncaab {
+    background-color: rgb(255, 203, 32);
+    color:rgb(0, 39, 103);
+}
+.MICHST_basketball_ncaab {
+    background-color: rgb(0, 71, 55);
+    color:white;
+}
+.MISS_basketball_ncaab {
+    background-color: rgb(18, 63, 168);
+    color:rgb(239, 29, 29);
+}
+.PUR_basketball_ncaab {
+    background-color: rgb(175, 152, 87);
+    color:rgb(0, 0, 0);
+}
+.TENN_basketball_ncaab {
+    background-color: rgb(255, 140, 0);
+    color:white;
+}
+.TXTECH_basketball_ncaab {
+    background-color: rgb(0, 0, 0);
+    color:rgb(223, 21, 42);
+}
+.BYU_basketball_ncaab {
+    background-color: rgb(38, 70, 212);
+    color:white;
+}

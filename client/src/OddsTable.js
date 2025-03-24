@@ -10,6 +10,8 @@ function OddsTable({currentOddsData, trackIDs, nontrackIDs, myBooks, marketKey, 
     
     useEffect(() => {
         console.log("\tOddsTable populating wanted")
+        console.log("\t\tcW: ",currentOddsData)
+        console.log("\t\ttIDs: ",trackIDs)
         pullWantDict(marketKey)
     },[])
     
@@ -33,8 +35,10 @@ function OddsTable({currentOddsData, trackIDs, nontrackIDs, myBooks, marketKey, 
             setInitializing(false)
         })
         } catch (err) {
-            console.log(err.message)
-            console.log("CATCH ERROR IN pullWantedDict function")
+            // console.log(err.message)
+            console.log("CATCH ERROR IN pullWantedDict function: ")
+            setWantDict({})
+            setInitializing(false)
         }
     }
 

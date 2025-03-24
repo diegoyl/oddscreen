@@ -45,7 +45,7 @@ const LESS_TOTAL_GAMES = 32
 
 // INITIAL VALUES
 const defaultMarketBackup = "h2h"
-const defaultSportBackup = "americanfootball_nfl"
+const defaultSportBackup = "basketball_ncaab"
 
 
 ////////////
@@ -105,8 +105,15 @@ router.get('/pullwantdict', async function(req, res, next) {
 
     await WantDict.findById("wantDict")
     .then(function(mongo_response){
-        var pulledData = mongo_response["data"][0]
-        var marketSpecific = pulledData[pull_market]
+        var pulledData = null
+        var marketSpecific = null
+        try {
+            pulledData = mongo_response["data"][0]
+            marketSpecific = pulledData[pull_market]
+        } catch {
+            console.warn("no data found: WantDict.findById")
+        }
+        
         console.log("\tPULLED DATA FROM wantDict: \n\t",marketSpecific)
 
         res.send(marketSpecific); // already processed
@@ -119,8 +126,14 @@ router.get('/pulltracking', async function(req, res, next) {
 
     await TrackingArr.findById("trackingIDs")
     .then(function(mongo_response){
-        var pulledData = mongo_response["data"][0]
-        var marketSpecific = pulledData[pull_market]
+        var pulledData = null
+        var marketSpecific = null
+        try {
+            pulledData = mongo_response["data"][0]
+            marketSpecific = pulledData[pull_market]
+        } catch {
+            console.warn("no pulltracking data found")
+        }
         console.log("\tPULLED DATA FROM trackingIDs: \n\t",marketSpecific)
 
         res.send(marketSpecific); // already processed
@@ -134,7 +147,12 @@ router.get('/pullcsv', async function(req, res,next) {
 
     await CsvData.findById(pull_market)
     .then(function(mongo_response){
-        var pulledData = mongo_response["data"]
+        var pulledData = null
+        try {
+            pulledData = mongo_response["data"]
+        } catch {
+            console.warn("no csvData data found")
+        }
         res.send(pulledData); // already processed
     })
 })
@@ -147,7 +165,12 @@ router.get('/reqs', async function(req, res,next) {
     console.log("\n\n\n$ NEW PULL REQUEST FOR REQS USED")
     await RawData.findById("reqsUsed")
     .then(function(mongo_response){
-        var pulledData = mongo_response["data"]
+        var pulledData = null
+        try {
+            pulledData = mongo_response["data"]
+        } catch {
+            console.warn("no requestUsed data found")
+        }
         console.log("\tPULLED DATA FROM reqsUsed:\n\t\t",pulledData)
         res.send(pulledData); // already processed
     })
@@ -168,9 +191,14 @@ router.get('/gamedict', async function(req, res,next) {
 
     await CurrentGameDicts.findById(pull_market)
     .then(function(mongo_response){
-        var pulled_data = mongo_response["gameDict"]
+        var pulledData = null
+        try {
+            pulledData = mongo_response["gameDict"]
+        } catch {
+            console.warn("no CurrentGameDicts data found")
+        }
         // console.log("\n\nPULLED DATA FROM  currentgamedicts:\n",pulled_data)
-        res.send(pulled_data); // already processed
+        res.send(pulledData); // already processed
     })
 })
 
@@ -180,7 +208,7 @@ router.get('/gamedict', async function(req, res,next) {
 ////////////
 router.get('/', async function(req, res,next) {
     console.log("\n* NEW GET REQUEST TO oddsAPI.js")
-    // console.log("\twith headers: ",req.headers)
+    console.log("\twith headers: ",req.headers)
 
     // TODO: ONLY PROCEED IF CALL WAS NOT MADE WITHIN LAST MINUTE, OTHEREWSIE SEND STORED RAW DATA
 
@@ -254,7 +282,9 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
         }
         // console.log("mkt check: ",market)
 
+        console.log("\t- 3. PRE PARSED ",json_data)
         let gameDictParsed = processData(json_data, market);
+        // console.log("\t- 3. gameDictParsed ",gameDictParsed)
         console.log("\t- 3. processData Finished ",market)
 
         await storeHistoryData(gameDictParsed, pullTime, market).
@@ -264,6 +294,7 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
         // TEXT FORMATTING + ADDING CHART DATA
         console.log("5. Finishing GameDict")
         const finalGameDict = await finishGameDict(gameDictParsed, market)
+        console.log("\t- 5. finalGameDict ",finalGameDict)
         // .then(function(finalGameDict) {
         //     // console.log(finalGameDict)
     
@@ -274,7 +305,7 @@ async function finishGet(res, json_data, used, remaining, pullTime, market){
 
         // STORE FULL GAMEDICT IN MONGODB
         console.log("6. Store full gameDict in Mongo")
-        await storeGameDict(finalGameDict, market)
+        // await storeGameDict(finalGameDict, market)
 
         console.log("\n7. buildAndStoreCSV called")
         const gamesCSV = buildAndStoreCSV(gameDictParsed, market)
@@ -540,9 +571,11 @@ function processData(JSON_data, market){
     let total_games = Math.min(JSON_data.length, 32) // so it doesnt pull further than 2 weeks
     total_games = total_games 
     // console.log("\n\n\n&&&& YEET\n", JSON_data,"\n\n");
+    console.log("\tn\nProcessData *******************")
 
     for (let game_idx=0; game_idx < total_games; game_idx++){
         let game_raw = JSON_data[game_idx];
+        console.log("\tPD _game",game_idx,":")//,JSON_data["0e92fbe2ff57b1a7fd753bc2aea3edd2"])//["bookmakers"][0]["markets"][0]["outcomes"])
         
         // BUILD DICT FOR APP.JS
         var vals_dict = {};
@@ -554,23 +587,34 @@ function processData(JSON_data, market){
             vals_dict["times"] = {"full":"","time":"LIVE","weekday":""}
             // console.log("\n\n\n&&&& YEET\n", game_raw,"\n\n");
         }
-        vals_dict["home"] = translateName(game_raw["home_team"],toMy3Code) 
-        vals_dict["away"] = translateName(game_raw["away_team"],toMy3Code)         
 
-        vals_dict["odds"] = buildOddsDict(game_raw["bookmakers"], game_raw["home_team"], market)
-        vals_dict["chartData"] = {times:[],odds:[]}
+        try {
+            vals_dict["home"] = translateName(game_raw["home_team"],toMy3Code) 
+            vals_dict["away"] = translateName(game_raw["away_team"],toMy3Code)         
+
+            vals_dict["odds"] = buildOddsDict(game_raw["bookmakers"], game_raw["home_team"], market)
+            vals_dict["chartData"] = {times:[],odds:[]}
 
 
-        if (Object.keys(vals_dict["odds"]).length === 0){
-            console.log("empty odds dict")
-            vals_dict["calcs"] = {"best":[0,0], "hold":"-", "bestBooks1":[], "bestBooks2":[]}
-        } else {
-            vals_dict["calcs"] = buildCalcsDict(vals_dict["odds"], market )
+            if (Object.keys(vals_dict["odds"]).length === 0){
+                console.log("empty odds dict")
+                vals_dict["calcs"] = {"best":[0,0], "hold":"-", "bestBooks1":[], "bestBooks2":[]}
+            } else {
+                vals_dict["calcs"] = buildCalcsDict(vals_dict["odds"], market )
+            }
+
+
+            let myGameID = vals_dict["home"]+vals_dict["away"]+vals_dict["times"]["full"];
+            console.log("\t\tid: ",myGameID)
+            console.log("\t\tvals: ",vals_dict)
+
+            all_games_dict[myGameID] = vals_dict
+        } catch {
+            console.log("\n____________________________\n\tTeams not in my3code db: ",)
+            console.log("\t\t",game_raw["home_team"])
+            console.log("\t\t",game_raw["away_team"])
+            console.log("_______________________________")
         }
-
-
-        let myGameID = vals_dict["home"]+vals_dict["away"]+vals_dict["times"]["full"];
-        all_games_dict[myGameID] = vals_dict
     }
     
     // console.log("\n\n* * * GAME DICT= ", all_games_dict)
@@ -1014,7 +1058,12 @@ function calcHoldPercent(p1,p2){
 }
 
 function translateName(input,dict) {
-    return dict[input]
+    let translation = dict[input]
+    if (translation) {
+        return translation
+    } else {
+        throw new Error("Team is not in dict!");
+    }
 }
 
 function findMode(lines) {
@@ -1246,7 +1295,34 @@ const toMy3Code = {
     'Seattle Seahawks':'SEA',
     'Tampa Bay Buccaneers':'TB',
     'Tennessee Titans':'TEN',   
-    'Washington Commanders':'WAS'
+    'Washington Commanders':'WAS',
+
+    // NCAAM 
+    "Alabama Crimson Tide": "BAMA",
+    "Arizona Wildcats": "ARIZ",
+    "Arkansas Razorbacks": "ARK",
+    "Auburn Tigers": "AUB",
+    "Baylor Bears": "BAY",
+    "Colorado St Rams": "COLST",
+    "Duke Blue Devils": "DUKE",
+    "Florida Gators": "FLA",
+    "Houston Cougars": "HOU",
+    "Illinois Fighting Illini": "ILL",
+    "Iowa State Cyclones": "IWST",
+    "Kentucky Wildcats": "UK",
+    "Maryland Terrapins": "MD",
+    "Michigan Wolverines": "MICH",
+    "Michigan St Spartans": "MICHST",
+    "New Mexico Lobos": "NMEX",
+    "Ole Miss Rebels": "MISS",
+    "Oregon Ducks": "ORE",
+    "Purdue Boilermakers": "PUR",
+    "Saint Mary's Gaels": "STM",
+    "Tennessee Volunteers": "TENN",
+    "Texas Tech Red Raiders": "TXTECH",
+    "UCLA Bruins": "UCLA",
+    "UConn Huskies": "UCONN",
+    "BYU Cougars": "BYU",
 }
 
 

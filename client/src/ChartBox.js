@@ -89,15 +89,19 @@ function ChartBox({chartData, curAvg, home, away}) {
             changeScale = 1
             new_o = 100
 
-    
-            if (dirChange <= 0) { 
-                pre_h = hsl_dict[home][0]
-                pre_s = hsl_dict[home][1]
-                pre_l = hsl_dict[home][2]
-            } else if (dirChange > 0){
-                pre_h = hsl_dict[away][0]
-                pre_s = hsl_dict[away][1]
-                pre_l = hsl_dict[away][2]
+            // check team is in hsl dict 
+            try { 
+                if (dirChange <= 0) { 
+                    pre_h = hsl_dict[home][0]
+                    pre_s = hsl_dict[home][1]
+                    pre_l = hsl_dict[home][2]
+                } else if (dirChange > 0){
+                    pre_h = hsl_dict[away][0]
+                    pre_s = hsl_dict[away][1]
+                    pre_l = hsl_dict[away][2]
+                }
+            } catch {
+                console.log("TEAM NOT IN HSL DICT, using default colors")
             }
         }
 
