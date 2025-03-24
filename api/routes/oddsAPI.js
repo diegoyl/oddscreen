@@ -11,6 +11,8 @@ var router = express.Router()
 
 const mongoose = require("mongoose");
 require('dotenv').config()
+
+// process.env file local copy is in diegoverflow2 Drive inside LOANER STORAGE 2 FEBMAR folder
 const apiKey = process.env.REACT_APP_API_KEY
 const schemas = require("../models/schemas")
 // const oddsHistoryModel = schemas["OddsHistory"]
