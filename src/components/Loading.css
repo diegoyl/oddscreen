@@ -1,0 +1,28 @@
+#loadingContainer {
+    background-color: var(--c-app-highlight);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    opacity: .5;
+    animation: fade .8s infinite alternate
+}
+.bounceText{
+    font-size: 10em;
+    margin-top: 33vh;
+    animation: bounce .4s infinite alternate
+}
+
+@keyframes bounce {
+    100% {
+        translate: 0 20px;
+    }
+}
+
+@keyframes fade {
+    100% {
+        opacity: .7;
+    }
+}

@@ -1,0 +1,12 @@
+#oddsTableContainer {
+    width: var(--oddsTableWidth);
+    min-height: 1em;
+    padding: 0;
+    margin: 0 auto;
+    margin-top: 15em;
+    position: relative;
+}
+
+.trackGap {
+  height: 2em;
+}
